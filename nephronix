@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+tid() {
+  f1=$(cat /dev/urandom | xxd -p | head -n2 | tail -n1 | cut -c1-8)
+  f2=$(cat /dev/urandom | xxd -p | head -n2 | tail -n1 | cut -c1-4)
+  f3=$(cat /dev/urandom | xxd -p | head -n2 | tail -n1 | cut -c1-4)
+  f4=$(cat /dev/urandom | xxd -p | head -n2 | tail -n1 | cut -c1-4)
+  f5=$(cat /dev/urandom | xxd -p | head -n2 | tail -n1 | cut -c1-12)
+  export NEPHTXID="$f1-$f2-$f3-$f4-$f5"
+}
+
+logpress() {
+  logsize=$(stat -c %s /var/log/nephronix.log)
+  if [[ "$logsize" -gt "100000" ]]; then
+    timestamper=$(date +%Y%m%d%H%M%S)
+    cp /var/log/nephronix.log /opt/nephronix/archive/nephronix_$timestamper.log
+    gzip -9 /opt/nephronix/archive/nephronix_$timestamper.log &&
+    cp /dev/null /var/log/nephronix.log
+  else
+    size="okay"
+  fi
+  find /opt/nephronix/archive/ -name "nephronix.*gz" -mtime +30 -exec rm -f {} \;
+}
+
+clear
+echo
+echo "Nephronix - shell security daemon"
+echo
+echo "$(date +%Y%m%d-%H:%M:%S)"
+echo
+echo "running on $(hostname) $(hostname -I)"
+echo
+echo "BLAKE2 of self: $(which nephronix | b2sum | cut -d' ' -f1)"
+echo
+echo "checking BLAKE2 hash of functions file..."
+
+currenthash=$(b2sum /opt/nephronix/lib/nephronix_functions.sh | cut -d' ' -f1)
+expectedhash=ce8f1cd48cdb234da46ed65b0588aa316a0e7aba4b411655401228834173a884b2c5a237e36593e2dadfb28eb8b97c59af7b692351a7a86ca963d5c80fa20ac3
+
+if [ "$currenthash" == "$expectedhash" ]; then
+    echo "hash of functions file is as expected."
+else
+    echo "unknown hash $currenthash of functions file! Exiting..."
+    exit 1
+fi
+
+echo
+source /opt/nephronix/lib/nephronix_functions.sh
+
+echo "Functions loaded. Starting daemonization, logging to /var/log/nephronix.log..."
+
+daemonloop() {
+  while true; do 
+    tid 2>/dev/null 
+    netdiff | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    procoll | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    userchk | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    kernmodchk | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    bootchk | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    pkgchk | while read line; do echo "$(date +%Y%m%d-%H:%M:%S) NEPHRONIX - $NEPHTXID - $line"; done
+    logpress
+    sleep 2
+  done
+}
+
+main() {
+  daemonloop >> /var/log/nephronix.log 2>&1
+}
+
+main
