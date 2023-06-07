@@ -1,0 +1,11 @@
+[Unit]
+Description=nephronix
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/nephronix
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
