@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+cp nephronix /usr/local/bin/nephronix
+chmod 700 /usr/local/bin/nephronix
+chown root:root /usr/local/bin/nephronix
+mkdir -p /opt/nephronix/archive
+mkdir /opt/nephronix/workspace
+mkdir /opt/nephronix/lib
+cp nephronix_functions.sh /opt/nephronix/lib/
+chmod 600 /opt/nephronix/lib/nephronix_functions.sh
+chown root:root /opt/nephronix/lib/nephronix_functions.sh
+cp nephronix.service /etc/systemd/system/nephronix.service
+systemctl enable nephronix
+systemctl restart nephronix
