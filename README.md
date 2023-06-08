@@ -44,7 +44,9 @@ The live log file /var/log/nephronix.log contains the detailed event data. The /
 
 The output of the instrumentation is stored in .dat files in /opt/nephronix/workspace/. These files are used by nephronix for comparing current to previous states and can also be read by other programs or people etc.
 
-<b>WARNING: Nephronix can generate large amounts of data in /opt/nephronix/archive/ and could fill up a disk slice! Adjust data retention and/or polling interval (sleep) appropriately for the use case. See the nephronix_light example which cuts the two noiseist checks to prioritize more significant events and use less resources.</b>
+While it largely depends on the activity of a given system, and whether nephronix has been tuned such as with nephronix_light, we might expect 0.3 MB per hour, 7.2 MB per day, and 216 MB per 30 days. Only 30 days of archives is held by nephronix by default, so the usage might hover around 216 MB and not grow significantly beyond that.
+
+ Adjust data retention and/or polling interval (sleep) appropriately for the use-case. See the nephronix_light example which cuts the two noiseist checks to prioritize more significant events and use less resources.
 
 Example checking on previous events in the archive:
 
