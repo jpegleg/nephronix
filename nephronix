@@ -35,7 +35,7 @@ echo
 echo "checking BLAKE2 hash of functions file..."
 
 currenthash=$(b2sum /opt/nephronix/lib/nephronix_functions.sh | cut -d' ' -f1)
-expectedhash=ce8f1cd48cdb234da46ed65b0588aa316a0e7aba4b411655401228834173a884b2c5a237e36593e2dadfb28eb8b97c59af7b692351a7a86ca963d5c80fa20ac3
+expectedhash=fa663a6b50604d29dd7d16659f03e8a39d4c4ebf9ad71c59456480a64c75e389da28280d68b876560064a4c551e53485518b2750a3cd6a07bb80e4da9db30b3b
 
 if [ "$currenthash" == "$expectedhash" ]; then
     echo "hash of functions file is as expected."
