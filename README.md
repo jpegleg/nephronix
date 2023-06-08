@@ -1,12 +1,12 @@
 # nephronix
 
-Nephronix is a simple linux system daemon for checking various aspects of the local system:
+Nephronix is a simple linux system daemon for checking various aspects of the local system. 
 
 High priority (sends a wall notice by default, could be replaced with email or text alerts etc):
 
 - changes to installed packages (rpm or deb)
 - changes to loaded kernel modules or BPF/eBPF
-- changes to files within /boot
+- changes to files within /boot (kernel and bootstrapping syscheck)
 
 Second priority (log only):
 
