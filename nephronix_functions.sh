@@ -124,7 +124,7 @@ pkgchk() {
 
     export PKGP="$(b2sum /opt/nephronix/workspace/pkg_previous.dat | cut -d' ' -f1)";
 
-    packages="$(dpkg -l || rpm -qa)"
+    packages="$(dpkg -l 2>/dev/null|| rpm -qa)"
 
     echo "$packages" > /opt/nephronix/workspace/pkg_current.dat
 
