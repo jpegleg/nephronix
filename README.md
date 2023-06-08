@@ -44,7 +44,7 @@ The live log file /var/log/nephronix.log contains the detailed event data. The /
 
 The output of the instrumentation is stored in .dat files in /opt/nephronix/workspace/. These files are used by nephronix for comparing current to previous states and can also be read by other programs or people etc.
 
-<b>WARNING: Nephronix can generate large amounts of data in /opt/nephronix/archive/ and could fill up a disk slice! Adjust data retention and/or polling interval (sleep) appropriately for the use case.</b>
+<b>WARNING: Nephronix can generate large amounts of data in /opt/nephronix/archive/ and could fill up a disk slice! Adjust data retention and/or polling interval (sleep) appropriately for the use case. See the nephronix_light example which cuts the two noiseist checks to prioritize more significant events and use less resources.</b>
 
 Example checking on previous events in the archive:
 
@@ -140,6 +140,11 @@ nephronix can be used as the primary if needed. If so, customization may be desi
 such as by ussing `logger` instead of `wall` and perhaps text or email notifications. 
 
 Remember, a security system is useful if people are engaged in responding, analyzing, and reviewing the data!
+
+#### nephronix_light
+
+Another version of nephronix in the file `nephronix_light` is included, which can be copied over `/usr/local/bin/nephronix` which does not do process checks or network connection checks. This eliminates the two noisiest event types so events are more meaningful and the data files in the log and archive are smaller. 
+While this does mean that the light version misses out on auditing both of those areas, this is an example of tuning for a given situation, focusing on higher severity events only.
 
 #### Adding reactive functions
 
